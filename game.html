@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي الفريقين 🔥</title>
+
+<style>
+body{
+margin:0;
+font-family:Tahoma;
+background:#0f172a;
+color:white;
+text-align:center;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+padding:15px 20px;
+background:#111827;
+align-items:center;
+}
+
+.score{
+font-size:18px;
+}
+
+.board{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+padding:30px;
+}
+
+.category{
+background:#1e293b;
+padding:10px;
+border-radius:15px;
+}
+
+.points button{
+width:80%;
+margin:8px;
+padding:10px;
+font-size:18px;
+background:#f97316;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.questionBox{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000000e6;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+padding:20px;
+}
+
+.timer{
+font-size:20px;
+margin-bottom:10px;
+}
+
+.questionText{
+font-size:22px;
+margin:20px;
+}
+
+.answerBtns button{
+margin:10px;
+padding:10px 20px;
+font-size:18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.correct{background:#22c55e;}
+.wrong{background:#ef4444;}
+.closeBtn{background:#f97316;}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="score">الفريق 1: <span id="score1">0</span></div>
+<h2>تحدي الفريقين 🔥</h2>
+<div class="score">الفريق 2: <span id="score2">0</span></div>
+</header>
+
+<div class="board">
+
+<div class="category">
+<h3>📺 مسلسلات</h3>
+<div class="points">
+<button onclick="openQuestion('series',200)">200</button>
+<button onclick="openQuestion('series',400)">400</button>
+<button onclick="openQuestion('series',600)">600</button>
+</div>
+</div>
+
+<div class="category">
+<h3>🇸🇦 السعودية</h3>
+<div class="points">
+<button onclick="openQuestion('saudi',200)">200</button>
+<button onclick="openQuestion('saudi',400)">400</button>
+<button onclick="openQuestion('saudi',600)">600</button>
+</div>
+</div>
+
+<div class="category">
+<h3>🌍 عامة</h3>
+<div class="points">
+<button onclick="openQuestion('general',200)">200</button>
+<button onclick="openQuestion('general',400)">400</button>
+<button onclick="openQuestion('general',600)">600</button>
+</div>
+</div>
+
+</div>
+
+<div class="questionBox" id="questionBox">
+<div class="timer">الوقت: <span id="timer">0</span> ثانية</div>
+<div class="questionText" id="questionText"></div>
+
+<div class="answerBtns">
+<button class="correct" onclick="addPoints()">إجابة صحيحة</button>
+<button class="wrong" onclick="closeQuestion()">إجابة خاطئة</button>
+<button class="closeBtn" onclick="closeQuestion()">رجوع</button>
+</div>
+</div>
+
+<script>
+
+let currentPoints = 0;
+let currentTeam = 1;
+let timerInterval;
+let time = 0;
+
+const questions = {
+series:{
+200:"من هو بطل مسلسل Game Of Thrones؟",
+400:"في أي سنة صدر مسلسل Breaking Bad؟",
+600:"ما اسم المدينة الرئيسية في مسلسل Vikings؟"
+},
+saudi:{
+200:"ما هي عاصمة السعودية؟",
+400:"في أي سنة تأسست المملكة؟",
+600:"من هو مؤسس الدولة السعودية الأولى؟"
+},
+general:{
+200:"كم عدد قارات العالم؟",
+400:"ما هو أكبر محيط في العالم؟",
+600:"من اخترع المصباح الكهربائي؟"
+}
+};
+
+function openQuestion(category,points){
+currentPoints = points;
+document.getElementById("questionText").innerText = questions[category][points];
+document.getElementById("questionBox").style.display="flex";
+
+time=0;
+document.getElementById("timer").innerText=time;
+timerInterval=setInterval(()=>{
+time++;
+document.getElementById("timer").innerText=time;
+},1000);
+}
+
+function addPoints(){
+if(currentTeam===1){
+document.getElementById("score1").innerText=
+parseInt(document.getElementById("score1").innerText)+currentPoints;
+currentTeam=2;
+}else{
+document.getElementById("score2").innerText=
+parseInt(document.getElementById("score2").innerText)+currentPoints;
+currentTeam=1;
+}
+closeQuestion();
+}
+
+function closeQuestion(){
+clearInterval(timerInterval);
+document.getElementById("questionBox").style.display="none";
+}
+
+</script>
+
+</body>
+</html>
