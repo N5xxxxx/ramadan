@@ -9,7 +9,7 @@
 *{box-sizing:border-box}
 body{
 margin:0;
-font-family:Tahoma;
+font-family:'Tahoma';
 background:#0f172a;
 color:white;
 text-align:center;
@@ -19,20 +19,30 @@ header{
 display:flex;
 justify-content:space-between;
 align-items:center;
+flex-wrap:wrap;
 padding:15px;
 background:#111827;
-flex-wrap:wrap;
 }
 
-.score{
-font-size:18px;
+.scoreBox{
 margin:5px;
 }
 
-.turn{
+.score{
+font-size:20px;
 font-weight:bold;
-color:#f97316;
 }
+
+.controls button{
+margin:3px;
+padding:5px 10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.plus{background:#22c55e;color:white}
+.minus{background:#ef4444;color:white}
 
 .board{
 display:grid;
@@ -45,10 +55,6 @@ padding:20px;
 background:#1e293b;
 padding:10px;
 border-radius:15px;
-}
-
-.category h3{
-margin-bottom:10px;
 }
 
 .points button{
@@ -83,14 +89,7 @@ padding:20px;
 }
 
 .timer{
-font-size:18px;
 margin-bottom:10px;
-}
-
-.questionText{
-font-size:22px;
-margin:15px;
-max-width:600px;
 }
 
 input{
@@ -104,9 +103,9 @@ margin:10px;
 
 button.action{
 padding:10px 20px;
-margin:10px;
+margin:5px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 background:#f97316;
 color:white;
 cursor:pointer;
@@ -114,7 +113,24 @@ cursor:pointer;
 
 .result{
 margin-top:10px;
-font-size:18px;
+}
+
+.helpers{
+margin-top:15px;
+}
+
+.helpers button{
+margin:5px;
+padding:6px 12px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#2563eb;
+color:white;
+}
+
+.helpers button:disabled{
+background:#374151;
 }
 
 @media(max-width:768px){
@@ -128,10 +144,29 @@ grid-template-columns:1fr;
 <body>
 
 <header>
-<div class="score">الفريق 1: <span id="score1">0</span></div>
+
+<div class="scoreBox">
+الفريق 1
+<div class="score" id="score1">0</div>
+<div class="controls">
+<button class="plus" onclick="manualAdd(1)">+</button>
+<button class="minus" onclick="manualMinus(1)">-</button>
+</div>
+<div>مساعدات: <span id="help1">3</span></div>
+</div>
+
 <h2>🔥 سين جيم</h2>
-<div class="score">الفريق 2: <span id="score2">0</span></div>
-<div class="turn">الدور الحالي: <span id="currentTeam">1</span></div>
+
+<div class="scoreBox">
+الفريق 2
+<div class="score" id="score2">0</div>
+<div class="controls">
+<button class="plus" onclick="manualAdd(2)">+</button>
+<button class="minus" onclick="manualMinus(2)">-</button>
+</div>
+<div>مساعدات: <span id="help2">3</span></div>
+</div>
+
 </header>
 
 <div class="board">
@@ -166,111 +201,143 @@ grid-template-columns:1fr;
 </div>
 
 <div class="questionBox" id="questionBox">
+
 <div class="timer">الوقت: <span id="timer">0</span> ثانية</div>
-<div class="questionText" id="questionText"></div>
+
+<h3 id="questionText"></h3>
 
 <input type="text" id="userAnswer" placeholder="اكتب الإجابة هنا">
 
-<button class="action" onclick="checkAnswer()">تحقق من الإجابة</button>
+<button class="action" onclick="checkAnswer()">تحقق</button>
 <div class="result" id="answerResult"></div>
+
+<div class="helpers">
+<button onclick="useDouble()">مضاعفة النقاط</button>
+<button onclick="skipQuestion()">تخطي</button>
+<button onclick="showHint()">تلميح</button>
+</div>
+
 <button class="action" onclick="closeQuestion()">رجوع</button>
+
 </div>
 
 <script>
 
-let currentPoints = 0;
-let currentTeam = 1;
+let currentPoints=0;
+let currentTeam=1;
 let timerInterval;
-let time = 0;
-let currentButton = null;
+let time=0;
+let currentButton=null;
+let doubleActive=false;
 
-const questions = {
+let helpers={
+1:3,
+2:3
+};
 
+const questions={
 series:{
 200:{q:"من هو بطل مسلسل Game Of Thrones؟",a:"jon snow"},
 400:{q:"في أي سنة صدر مسلسل Breaking Bad؟",a:"2008"},
 600:{q:"ما اسم المدينة الرئيسية في مسلسل Vikings؟",a:"kattegat"}
 },
-
 saudi:{
-200:{q:"ما هي عاصمة المملكة العربية السعودية؟",a:"الرياض"},
-400:{q:"في أي عام تم توحيد المملكة العربية السعودية؟",a:"1932"},
-600:{q:"من هو مؤسس الدولة السعودية الأولى؟",a:"محمد بن سعود"}
+200:{q:"ما هي عاصمة السعودية؟",a:"الرياض"},
+400:{q:"في أي عام تم توحيد المملكة؟",a:"1932"},
+600:{q:"من مؤسس الدولة السعودية الأولى؟",a:"محمد بن سعود"}
 },
-
 general:{
 200:{q:"كم عدد قارات العالم؟",a:"7"},
-400:{q:"ما هو أكبر محيط في العالم؟",a:"المحيط الهادئ"},
-600:{q:"من اخترع المصباح الكهربائي؟",a:"توماس اديسون"}
+400:{q:"ما أكبر محيط في العالم؟",a:"المحيط الهادئ"},
+600:{q:"من اخترع المصباح؟",a:"توماس اديسون"}
 }
-
 };
 
-function openQuestion(button,category,points){
+function openQuestion(btn,cat,pts){
+currentButton=btn;
+currentPoints=pts;
+doubleActive=false;
 
-currentButton = button;
-currentPoints = points;
+let data=questions[cat][pts];
+window.correctAnswer=data.a.toLowerCase();
 
-let data = questions[category][points];
-
-window.correctAnswer = data.a.toLowerCase();
-
-document.getElementById("questionText").innerText = data.q;
-document.getElementById("answerResult").innerText = "";
-document.getElementById("userAnswer").value = "";
-
+document.getElementById("questionText").innerText=data.q;
+document.getElementById("answerResult").innerText="";
+document.getElementById("userAnswer").value="";
 document.getElementById("questionBox").style.display="flex";
 
 time=0;
 document.getElementById("timer").innerText=time;
-
-timerInterval=setInterval(()=>{
-time++;
-document.getElementById("timer").innerText=time;
-},1000);
+timerInterval=setInterval(()=>{time++;document.getElementById("timer").innerText=time;},1000);
 }
 
 function checkAnswer(){
+let input=document.getElementById("userAnswer").value.trim().toLowerCase();
+let pts=doubleActive?currentPoints*2:currentPoints;
 
-let userInput = document.getElementById("userAnswer").value.trim().toLowerCase();
-
-if(userInput === window.correctAnswer){
-
-document.getElementById("answerResult").innerHTML =
-"✅ إجابة صحيحة<br>الإجابة: "+window.correctAnswer;
-
-if(currentTeam===1){
-document.getElementById("score1").innerText=
-parseInt(document.getElementById("score1").innerText)+currentPoints;
-currentTeam=2;
+if(input===window.correctAnswer){
+document.getElementById("answerResult").innerHTML="✅ صحيح";
+addScore(currentTeam,pts);
 }else{
-document.getElementById("score2").innerText=
-parseInt(document.getElementById("score2").innerText)+currentPoints;
-currentTeam=1;
+document.getElementById("answerResult").innerHTML="❌ خطأ<br>الإجابة: "+window.correctAnswer;
 }
 
-document.getElementById("currentTeam").innerText=currentTeam;
-
-}else{
-
-document.getElementById("answerResult").innerHTML =
-"❌ إجابة خاطئة<br>الإجابة الصحيحة: "+window.correctAnswer;
-
-currentTeam = currentTeam===1?2:1;
-document.getElementById("currentTeam").innerText=currentTeam;
-}
-
+switchTeam();
+disableButton();
 clearInterval(timerInterval);
-
-if(currentButton){
-currentButton.disabled = true;
 }
 
+function addScore(team,pts){
+let el=document.getElementById("score"+team);
+el.innerText=parseInt(el.innerText)+pts;
+}
+
+function manualAdd(team){
+addScore(team,100);
+}
+
+function manualMinus(team){
+addScore(team,-100);
+}
+
+function switchTeam(){
+currentTeam=currentTeam===1?2:1;
+}
+
+function disableButton(){
+if(currentButton){
+currentButton.disabled=true;
+}
 }
 
 function closeQuestion(){
 clearInterval(timerInterval);
 document.getElementById("questionBox").style.display="none";
+}
+
+function useDouble(){
+if(helpers[currentTeam]>0){
+doubleActive=true;
+helpers[currentTeam]--;
+document.getElementById("help"+currentTeam).innerText=helpers[currentTeam];
+}
+}
+
+function skipQuestion(){
+if(helpers[currentTeam]>0){
+helpers[currentTeam]--;
+document.getElementById("help"+currentTeam).innerText=helpers[currentTeam];
+closeQuestion();
+disableButton();
+}
+}
+
+function showHint(){
+if(helpers[currentTeam]>0){
+helpers[currentTeam]--;
+document.getElementById("help"+currentTeam).innerText=helpers[currentTeam];
+alert("أول حرف: "+window.correctAnswer.charAt(0).toUpperCase());
+}
 }
 
 </script>
