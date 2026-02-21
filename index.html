@@ -12,7 +12,7 @@
 body{
 margin:0;
 font-family:'Cairo',sans-serif;
-background:#0b1320;
+background:black;
 color:white;
 text-align:center;
 overflow-x:hidden;
@@ -22,31 +22,33 @@ overflow-x:hidden;
 #bgVideo{
 position:fixed;
 top:0;left:0;
-min-width:100%;
-min-height:100%;
+width:100%;height:100%;
 object-fit:cover;
 z-index:-3;
-opacity:.28;
+opacity:.45;
 }
 
-/* طبقة تدرج */
-body::after{
-content:"";
+/* تغميق */
+.overlay-bg{
 position:fixed;
 top:0;left:0;
 width:100%;height:100%;
-background:linear-gradient(to bottom,#0b1320 10%,rgba(0,0,0,.9));
+background:linear-gradient(to bottom,rgba(0,0,0,.6),rgba(0,0,0,.9));
 z-index:-2;
 }
 
-/* نجوم خفيفة */
+/* نجوم */
 .stars{
 position:fixed;
-top:0;left:0;
 width:100%;height:100%;
 background:url("https://www.transparenttextures.com/patterns/stardust.png");
-opacity:.18;
+animation:moveStars 90s linear infinite;
+opacity:.25;
 z-index:-1;
+}
+@keyframes moveStars{
+from{background-position:0 0;}
+to{background-position:2000px 2000px;}
 }
 
 /* هلال */
@@ -59,27 +61,19 @@ font-size:80px;
 animation:dropMoon 3s ease forwards;
 }
 @keyframes dropMoon{
-0%{top:-120px}
-100%{top:20px}
+0%{top:-120px;}
+100%{top:20px;}
 }
 
-/* العنوان */
 h1{
 margin-top:120px;
 font-size:48px;
-font-weight:900;
 color:gold;
-text-shadow:0 0 25px rgba(255,215,0,.6);
-animation:fadeIn 2s ease;
-}
-.subtitle{
-opacity:.9;
-margin-top:-15px;
-margin-bottom:40px;
-font-size:18px;
+text-shadow:0 0 30px gold;
 }
 
-/* شبكة الأقسام */
+.subtitle{margin-bottom:40px}
+
 .grid{
 display:flex;
 justify-content:center;
@@ -96,16 +90,10 @@ overflow:hidden;
 position:relative;
 cursor:pointer;
 transition:.4s;
-box-shadow:0 0 25px rgba(255,215,0,.3);
+box-shadow:0 0 30px rgba(255,215,0,.4);
 }
-.card:hover{transform:translateY(-10px) scale(1.05)}
-
-.card img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
+.card:hover{transform:scale(1.05)}
+.card img{width:100%;height:100%;object-fit:cover}
 .card::after{
 content:"";
 position:absolute;
@@ -113,16 +101,12 @@ top:0;left:0;
 width:100%;height:100%;
 background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
 }
-
 .card h2{
 position:absolute;
 bottom:20px;
 width:100%;
-z-index:2;
-font-size:22px;
 }
 
-/* الأقسام */
 .section{
 display:none;
 min-height:100vh;
@@ -130,14 +114,13 @@ padding:120px 20px;
 background-size:cover;
 background-position:center;
 position:relative;
-animation:fadeIn 1s ease;
 }
 .section::before{
 content:"";
 position:absolute;
 top:0;left:0;
 width:100%;height:100%;
-background:rgba(0,0,0,.75);
+background:rgba(0,0,0,.85);
 }
 .section .content{
 position:relative;
@@ -146,16 +129,11 @@ max-width:800px;
 margin:auto;
 }
 
-@keyframes fadeIn{
-from{opacity:0}
-to{opacity:1}
-}
-
 button{
-margin-top:20px;
+margin-top:15px;
 padding:10px 20px;
 border:none;
-border-radius:20px;
+border-radius:25px;
 background:gold;
 color:black;
 cursor:pointer;
@@ -172,7 +150,12 @@ border:none;
 padding:8px 15px;
 border-radius:20px;
 cursor:pointer;
-font-weight:bold;
+}
+
+@media(max-width:768px){
+.grid{flex-direction:column;align-items:center}
+.card{width:90%;height:320px}
+h1{font-size:30px}
 }
 </style>
 </head>
@@ -183,20 +166,20 @@ font-weight:bold;
 <source src="bg.mp4" type="video/mp4">
 </video>
 
+<div class="overlay-bg"></div>
 <div class="stars"></div>
 <div class="moon">🌙</div>
 
-<audio id="mainAudio" loop>
+<audio id="mainAudio" autoplay loop>
 <source src="ramadan.mp3" type="audio/mpeg">
 </audio>
 
-<button class="sound-btn" onclick="toggleSound()">🔊 تشغيل</button>
+<button class="sound-btn" onclick="toggleSound()">🔊</button>
 
 <h1>رمضان كريم</h1>
 <p class="subtitle">عملاً صالحاً متقبلاً إن شاء الله 🤲</p>
 
 <div class="grid">
-
 <div class="card" onclick="openSection('advice','https://i.pinimg.com/736x/91/55/1c/91551c89081cd8dbb0dc7ddb84e57617.jpg')">
 <img src="https://i.pinimg.com/736x/91/55/1c/91551c89081cd8dbb0dc7ddb84e57617.jpg">
 <h2>نصائح رمضانية 🤲</h2>
@@ -211,13 +194,12 @@ font-weight:bold;
 <img src="https://i.pinimg.com/736x/68/fa/ca/68faca965da4d51d53ec5db537a174dd.jpg">
 <h2>أسئلة رمضانية ❓</h2>
 </div>
-
 </div>
 
 <!-- نصائح -->
 <div id="advice" class="section">
 <div class="content">
-<h2>نصيحة رمضانية 🤲</h2>
+<h2>20 نصيحة رمضانية 🤲</h2>
 <p id="randomAdvice"></p>
 <button onclick="newAdvice()">نصيحة أخرى</button><br>
 <button onclick="goBack()">رجوع</button>
@@ -227,7 +209,7 @@ font-weight:bold;
 <!-- شعر -->
 <div id="poetry" class="section">
 <div class="content">
-<h2>قصيدة رمضانية 🕌</h2>
+<h2>20 شعر رمضاني 🕌</h2>
 <p id="poemBox" style="line-height:2"></p>
 <button onclick="newPoem()">قصيدة أخرى</button><br>
 <button onclick="goBack()">رجوع</button>
@@ -237,7 +219,7 @@ font-weight:bold;
 <!-- أسئلة -->
 <div id="quiz" class="section">
 <div class="content">
-<h2>سؤال رمضاني ❓</h2>
+<h2>20 سؤال صح/خطأ ❓</h2>
 <p id="question"></p>
 <button onclick="answer(true)">صح</button>
 <button onclick="answer(false)">خطأ</button>
@@ -249,6 +231,8 @@ font-weight:bold;
 
 <script>
 let audio=document.getElementById("mainAudio");
+audio.volume=0.15;
+document.addEventListener("click",()=>audio.play(),{once:true});
 function toggleSound(){audio.paused?audio.play():audio.pause();}
 
 function openSection(id,image){
@@ -265,29 +249,30 @@ document.querySelectorAll('.section').forEach(sec=>sec.style.display='none');
 document.querySelector('.grid').style.display='flex';
 }
 
-/* 20 نصيحة */
+/* 20 نصيحة حقيقية */
 const advices=[
 "أخلص نيتك لله في كل عمل.",
-"الدعاء عند الإفطار مستجاب بإذن الله.",
-"أكثر من قراءة القرآن يومياً.",
-"احفظ لسانك عن الغيبة والنميمة.",
-"الصدقة في رمضان مضاعفة الأجر.",
-"قم الليل ولو بركعتين.",
-"أكثر من الاستغفار في السحر.",
-"لا تضيع وقتك فيما لا ينفع.",
-"أصلح قلبك قبل أن تنشغل بغيرك.",
-"اجعل لك ورداً ثابتاً من القرآن.",
-"بر الوالدين من أعظم أسباب القبول.",
-"لا تجعل همك الطعام فقط بل القبول.",
-"أكثر من قول: اللهم إنك عفو تحب العفو فاعفُ عني.",
-"أطعم محتاجاً ولو بالقليل.",
-"نم مبكراً لتدرك الفجر.",
-"أحسن الظن بالله دائماً.",
-"تجنب الغضب وأنت صائم.",
+"أكثر من الدعاء عند الإفطار.",
 "احرص على صلاة التراويح.",
-"حاسب نفسك قبل أن تُحاسب.",
-"تذكر أن رمضان قد لا يتكرر."
+"اجعل لك ورداً يومياً من القرآن.",
+"تجنب الغيبة والنميمة.",
+"بر الوالدين سبب للقبول.",
+"أكثر من الاستغفار.",
+"أطعم مسكيناً.",
+"قم الليل ولو بركعتين.",
+"أحسن الظن بالله.",
+"حافظ على صلاة الجماعة.",
+"لا تغضب وأنت صائم.",
+"تصدق ولو بالقليل.",
+"اغتنم العشر الأواخر.",
+"اجتهد في ليلة القدر.",
+"حافظ على السحور.",
+"أكثر من قول سبحان الله.",
+"سامح من ظلمك.",
+"أصلح نيتك دائماً.",
+"تذكر أن القبول أهم من العمل."
 ];
+
 function newAdvice(){
 document.getElementById("randomAdvice").innerText=
 advices[Math.floor(Math.random()*advices.length)];
@@ -295,59 +280,57 @@ advices[Math.floor(Math.random()*advices.length)];
 
 /* 20 شعر */
 const poems=[
-`رمضان أقبل يا أولي الألبابِ  
-فاستقبلوه بعد طول غيابِ`,
-`أتاك شهر الخير بالبشرى  
-فأكرم به من زائر يُهدى`,
-`يا شهر رمضان مهلاً  
-فالقلوب بك تأنس`,
-`إذا ما خلوت الدهر يوماً فلا تقل  
-خلوت ولكن قل عليّ رقيب`,
-`شهر الصيام أتى بالخير مبتسماً`,
-`رمضان يا شهر الرحمة والغفران`,
-`أقبلت يا رمضان بالأنوار`,
-`يا صائماً لله محتسباً`,
-`في رمضان تسمو الأرواح`,
-`يا نفس توبي فإن الموت قد حانا`,
-`قم في الدجى وناجِ ربك خاشعاً`,
-`شهر القيام وشهر الدعاء`,
-`رمضان مدرسة التقوى`,
-`يا باغي الخير أقبل`,
-`صم عن الحرام كما تصوم عن الطعام`,
-`في الصوم سرٌ لا يراه سوى الإله`,
-`رمضان نورٌ في القلوب إذا أتى`,
-`يا شهر خيرٍ أقبلت بالبِرِّ`,
-`إذا جاء رمضان فافتح قلبك قبل بابك`,
-`لي في رمضان دعوة لا تخيب`
+"رمضان أقبل يا أولي الألباب",
+"أتاك شهر الخير بالبشرى",
+"يا شهر رمضان مهلاً",
+"إذا ما خلوت الدهر يوماً فلا تقل",
+"قم في الدجى وناج ربك",
+"رمضان نور القلوب",
+"يا باغي الخير أقبل",
+"شهر الصيام أتى بالخير",
+"يا نفس توبي فإن الموت قد حانا",
+"في الصوم سرٌ لا يراه إلا الله",
+"شهر القيام وشهر الدعاء",
+"رمضان مدرسة التقوى",
+"لي في رمضان دعوة لا تخيب",
+"رمضان شهر مغفرة ورحمة",
+"أقبلت يا رمضان بالأنوار",
+"صم عن الحرام كما تصوم عن الطعام",
+"شهر التوبة والغفران",
+"رمضان شهر الصبر",
+"إذا جاء رمضان فافتح قلبك",
+"رمضان يا شهر الرحمة"
 ];
+
 function newPoem(){
 document.getElementById("poemBox").innerText=
 poems[Math.floor(Math.random()*poems.length)];
 }
 
-/* 20 سؤال */
+/* 20 سؤال صحيحين */
 const questions=[
-{q:"السحور سنة وفيه بركة.",a:true},
-{q:"من أفطر ناسياً فعليه قضاء.",a:false},
-{q:"الغيبة لا تنقص أجر الصيام.",a:false},
+{q:"السحور سنة.",a:true},
+{q:"من أفطر ناسياً صومه صحيح.",a:true},
+{q:"الغيبة لا تؤثر على الصيام.",a:false},
 {q:"ليلة القدر في رمضان.",a:true},
-{q:"الصيام فرض على كل مسلم بالغ عاقل.",a:true},
-{q:"القيء عمداً يفطر الصائم.",a:true},
-{q:"يجوز الإفطار للمريض إذا شق عليه الصوم.",a:true},
-{q:"التفكير في الطعام يبطل الصيام.",a:false},
-{q:"من لم يبيت النية قبل الفجر فلا صيام له في الفرض.",a:true},
-{q:"السب والشتم لا يؤثران في الصيام.",a:false},
-{q:"الدعاء في رمضان له فضل عظيم.",a:true},
-{q:"الصدقة في رمضان مضاعفة الأجر.",a:true},
-{q:"يجوز للصائم استعمال السواك.",a:true},
-{q:"من جامع في نهار رمضان فعليه كفارة.",a:true},
 {q:"صلاة التراويح فرض.",a:false},
-{q:"صيام رمضان ركن من أركان الإسلام.",a:true},
-{q:"يجوز التبرع بالدم للصائم دون أن يفطر إذا لم يضعف.",a:true},
-{q:"النية شرط لصحة الصيام.",a:true},
-{q:"من أكل شاكاً في الفجر فصيامه صحيح.",a:true},
-{q:"الاعتكاف يكون في رمضان.",a:true}
+{q:"الصدقة في رمضان مضاعفة.",a:true},
+{q:"النية شرط للصيام.",a:true},
+{q:"يجوز الكذب في رمضان.",a:false},
+{q:"قيام الليل له أجر.",a:true},
+{q:"رمضان ركن من أركان الإسلام.",a:true},
+{q:"القيء عمداً يفطر.",a:true},
+{q:"السب لا ينقص الأجر.",a:false},
+{q:"الاعتكاف في رمضان مشروع.",a:true},
+{q:"يجوز الأكل بعد الفجر عمداً.",a:false},
+{q:"الدعاء عند الإفطار مستجاب.",a:true},
+{q:"الصيام يربي النفس.",a:true},
+{q:"من جامع في النهار لا شيء عليه.",a:false},
+{q:"القرآن أنزل في رمضان.",a:true},
+{q:"رمضان شهر مغفرة.",a:true},
+{q:"يجوز ترك الصلاة في رمضان.",a:false}
 ];
+
 function newQuestion(){
 let r=questions[Math.floor(Math.random()*questions.length)];
 window.currentAnswer=r.a;
