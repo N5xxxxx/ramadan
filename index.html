@@ -2,67 +2,102 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>إلى أمي 🤍</title>
+<title>Ramadan 🌙</title>
+
 <style>
 body{
-font-family: Arial;
-background:#f8e8e8;
+margin:0;
+font-family:Arial;
 text-align:center;
-padding:40px;
+background:#0f172a;
+color:white;
 }
+
+h1{margin-top:40px;}
+
 button{
-padding:10px 20px;
+padding:12px 25px;
 margin:10px;
 border:none;
 border-radius:20px;
-background:#d8a7b1;
+background:#22c55e;
 color:white;
 cursor:pointer;
+font-size:16px;
 }
+
 .section{
 display:none;
-margin-top:30px;
+padding:60px;
+min-height:60vh;
+background-size:cover;
+background-position:center;
+position:relative;
 }
-.card{
-background:white;
-padding:20px;
-margin:15px auto;
-width:60%;
-border-radius:15px;
+
+.overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+}
+
+.content{
+position:relative;
+z-index:2;
+}
+
+.moon{
+position:fixed;
+top:-100px;
+left:50%;
+transform:translateX(-50%);
+font-size:60px;
+animation:dropMoon 4s ease forwards;
+}
+
+@keyframes dropMoon{
+0%{top:-100px;}
+100%{top:20px;}
 }
 </style>
 </head>
+
 <body>
 
-<h1>إلى أمي 🤍</h1>
+<h1>Ramadan 🌙</h1>
 
-<button onclick="showSection('poetry')">🌷 شعر</button>
-<button onclick="showSection('words')">💕 كلام من القلب</button>
-<button onclick="showSection('songs')">🎶 شيلات</button>
+<button onclick="openSection('repent')">Repent – Allah Forgives</button>
+<button onclick="openSection('jazak')">Jazak Allah Khair</button>
+<button onclick="openSection('say')">Say It Right</button>
 
-<div id="poetry" class="section">
-<div class="card">أحن إلى خبز أمي 🤍</div>
-<div class="card">الأم مدرسة إذا أعددتها أعددت شعبًا طيب الأعراق</div>
+<div id="repent" class="section">
+<div class="overlay"></div>
+<div class="content">
+<h2>May Allah Forgive You 🤍</h2>
+<p>Allah loves those who repent.</p>
+</div>
 </div>
 
-<div id="words" class="section">
-<div class="card">أمي… أنتِ الأمان.</div>
-<div class="card">حضنك وطن لا يخذلني.</div>
+<div id="jazak" class="section">
+<div class="overlay"></div>
+<div class="content">
+<h2>Jazak Allah Khair 🤲</h2>
+<p>May Allah reward you with goodness.</p>
+</div>
 </div>
 
-<div id="songs" class="section">
-<div class="card">🎵 شيلة يا أمي</div>
-<div class="card">🎵 أمي جنتي</div>
+<div id="say" class="section">
+<div class="overlay"></div>
+<div class="content">
+<h2>Say It Right ✅</h2>
+<p>Speak good or remain silent.</p>
+</div>
 </div>
 
-<script>
-function showSection(id){
-document.querySelectorAll('.section').forEach(sec=>{
-sec.style.display='none';
-});
-document.getElementById(id).style.display='block';
-}
-</script>
+<div class="moon">🌙</div>
 
 </body>
 </html>
