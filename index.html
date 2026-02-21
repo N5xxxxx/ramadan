@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>إلى أمي 🤍</title>
+<style>
+body{
+font-family: Arial;
+background:#f8e8e8;
+text-align:center;
+padding:40px;
+}
+button{
+padding:10px 20px;
+margin:10px;
+border:none;
+border-radius:20px;
+background:#d8a7b1;
+color:white;
+cursor:pointer;
+}
+.section{
+display:none;
+margin-top:30px;
+}
+.card{
+background:white;
+padding:20px;
+margin:15px auto;
+width:60%;
+border-radius:15px;
+}
+</style>
+</head>
+<body>
+
+<h1>إلى أمي 🤍</h1>
+
+<button onclick="showSection('poetry')">🌷 شعر</button>
+<button onclick="showSection('words')">💕 كلام من القلب</button>
+<button onclick="showSection('songs')">🎶 شيلات</button>
+
+<div id="poetry" class="section">
+<div class="card">أحن إلى خبز أمي 🤍</div>
+<div class="card">الأم مدرسة إذا أعددتها أعددت شعبًا طيب الأعراق</div>
+</div>
+
+<div id="words" class="section">
+<div class="card">أمي… أنتِ الأمان.</div>
+<div class="card">حضنك وطن لا يخذلني.</div>
+</div>
+
+<div id="songs" class="section">
+<div class="card">🎵 شيلة يا أمي</div>
+<div class="card">🎵 أمي جنتي</div>
+</div>
+
+<script>
+function showSection(id){
+document.querySelectorAll('.section').forEach(sec=>{
+sec.style.display='none';
+});
+document.getElementById(id).style.display='block';
+}
+</script>
+
+</body>
+</html>
