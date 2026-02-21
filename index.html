@@ -17,6 +17,20 @@ h1{
 margin:40px 0;
 }
 
+/* زر الصوت */
+.sound-btn{
+position:fixed;
+top:20px;
+left:20px;
+background:#22c55e;
+border:none;
+padding:8px 15px;
+border-radius:20px;
+color:white;
+cursor:pointer;
+z-index:999;
+}
+
 /* شبكة الصور */
 .grid{
 display:flex;
@@ -104,6 +118,13 @@ cursor:pointer;
 
 <body>
 
+<!-- الصوت -->
+<audio id="mainAudio" loop>
+<source src="ramadan.mp3" type="audio/mpeg">
+</audio>
+
+<button class="sound-btn" onclick="toggleSound()">🔊 تشغيل</button>
+
 <h1>رمضان كريم 🌙</h1>
 
 <div class="grid">
@@ -153,6 +174,19 @@ cursor:pointer;
 </div>
 
 <script>
+
+let audio = document.getElementById("mainAudio");
+let btn = document.querySelector(".sound-btn");
+
+function toggleSound(){
+if(audio.paused){
+audio.play();
+btn.innerText = "🔊 شغال";
+}else{
+audio.pause();
+btn.innerText = "🔇 كتم";
+}
+}
 
 function openSection(id,image){
 document.querySelector('.grid').style.display='none';
